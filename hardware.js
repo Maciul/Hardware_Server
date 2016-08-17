@@ -13,9 +13,9 @@ var firebaseDoorsRef = new Firebase(
 );
 
 // Lights
-// var firebaseLightsRef = new Firebase(
-//   "https://smarthomedenver.firebaseio.com/lights"
-// );
+var firebaseLightsRef = new Firebase(
+  "https://smarthomedenver.firebaseio.com/lights"
+);
 
 board.on("ready", function() {
   var led = new five.Led(13);
@@ -26,14 +26,15 @@ board.on("ready", function() {
   // New temp sensor
   var temp = new five.Thermometer({
     controller: "LM35",
-    pin: "A0"
+    pin: "A0",
+    freq: 500
   });
 
   // New light sensor
-//   var photoresistor = new five.Sensor({
-//     pin: "A5",
-//     freq: 20
-//   });
+  var photoresistor = new five.Sensor({
+    pin: "A1",
+    freq: 400
+  });
 
   // Button
   board.repl.inject({
@@ -54,22 +55,26 @@ board.on("ready", function() {
     firebaseDoorsRef.set({'doors': 'open'});
   });
 
+
+  //sendingTemp = this.celsius
+  //sendingLight = photoresistor.value
+
   /* ************************************************************* */
 
   // Temperature
   temp.on("change", function() {
-    firebaseTempRef.set({ 'fahrenheit': this.fahrenheit + "°F" });
+    firebaseTempRef.set({ 'fahrenheit': this.celsius });
   });
 
   /* ************************************************************* */
 
   // Lights
-  // board.repl.inject({
-  //   pot: photoresistor
-  // });
-  //
-  // photoresistor.on('data', function() {
-  //   firebaseLightsRef.set({ 'value': photoresistor.value });
-  // });
+  board.repl.inject({
+    pot: photoresistor
+  });
+
+  photoresistor.on('data', function() {
+    firebaseLightsRef.set({ 'value': photoresistor.value });
+  });
 
 });
