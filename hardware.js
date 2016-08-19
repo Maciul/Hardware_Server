@@ -35,8 +35,8 @@ board.on("ready", function() {
 
   // New light sensor
   var photoresistor = new five.Sensor({
-    pin: "A1",
-    freq: 20
+    pin: "A1",
+    freq: 20
   });
 
   // Button
